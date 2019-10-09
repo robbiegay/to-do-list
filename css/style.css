@@ -1,5 +1,12 @@
 /* Style */
-
 html, body {
     height: 100%;
+}
+
+h1 {
+    font-family: 'Mansalva', cursive;
+}
+
+input {
+    font-family: 'Lato', sans-serif;
 }
