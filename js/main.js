@@ -59,7 +59,14 @@ function loadApp() {
 
     // When the page loads, if there is already values in the object array, populate the array
     if (localStorage.length > 0) {
-        populateObjArray();
+        for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
+            let parsedJSON = JSON.parse(window.localStorage.todoList)[`${i}`];
+            LIST_OBJ_ARRAY.push(new ListObj(i, parsedJSON.title, parsedJSON.done));
+            addToList(i, JSON.parse(window.localStorage.todoList)[i].title);
+            if (LIST_OBJ_ARRAY[i].done) {
+                document.querySelector(`input[name="${i}"]`).parentElement.className = 'text-danger';
+            }
+        }
     }
 }
 
@@ -75,16 +82,18 @@ document.addEventListener('keydown', function (e) {
     }
     // For testing --> Displays the local storage and list obj array on "-" key
     if (e.keyCode === 189) {
-        console.log(window.localStorage);
+        console.log('----- Parsed JSON -----');
+        console.log(JSON.parse(window.localStorage.todoList));
+        console.log('----- LIST_OBJ_ARRAY -----');
         console.log(LIST_OBJ_ARRAY);
     }
     // "Enter" key
     if (e.keyCode === 13) {
-        localStorage.setItem(`listItem${localStorage.length}`, `${INPUT_BOX.value}`);
-        console.log(window.localStorage);
-        addToObjArray();
-        console.log(LIST_OBJ_ARRAY);
+        LIST_OBJ_ARRAY.push(new ListObj(LIST_OBJ_ARRAY.length, `${INPUT_BOX.value}`, false));
+        localStorage.setItem(`todoList`, JSON.stringify(LIST_OBJ_ARRAY));
         INPUT_BOX.value = '';
+        let todoParsed = JSON.parse(window.localStorage.todoList);
+        addToList(todoParsed.length - 1, todoParsed[todoParsed.length - 1].title);
     }
 });
 
@@ -92,22 +101,9 @@ function makeBtnsVisible() {
     // Make the buttons visible
 }
 
-function populateObjArray() {
-    for (let i = 0; i < localStorage.length; i++) {
-        LIST_OBJ_ARRAY.push(new ListObj(i, localStorage.getItem(`listItem${i}`), false));
-        let newListEntry = createElementAndClass('div', '');
-        // newListEntry.innerHTML = `<li>${LIST_OBJ_ARRAY[i].title}</li>`;
-        newListEntry.innerHTML = `<input type="checkbox" name="${i}" value=""> ${LIST_OBJ_ARRAY[i].title}`;
-        newListEntry.addEventListener('change', strike);
-        TO_DO_LIST.appendChild(newListEntry);
-    }
-}
-
-function addToObjArray() {
-    LIST_OBJ_ARRAY.push(new ListObj((localStorage.length - 1), `${INPUT_BOX.value}`, false));
+function addToList(name, title) {
     let newListEntry = createElementAndClass('div', '');
-    // newListEntry.innerHTML = `<li>${LIST_OBJ_ARRAY[localStorage.length - 1].title}</li>`;
-    newListEntry.innerHTML = `<input type="checkbox" name="${localStorage.length - 1}" value=""> ${LIST_OBJ_ARRAY[localStorage.length - 1].title}`;
+    newListEntry.innerHTML = `<input type="checkbox" name="${name}" value=""> ${title}`;
     newListEntry.addEventListener('change', strike);
     TO_DO_LIST.appendChild(newListEntry);
 }
@@ -117,14 +113,15 @@ function strike(e) {
     if (e.target.checked) {
         LIST_OBJ_ARRAY[e.target.attributes[1].value].done = true;
         document.querySelector(`input[name="${e.target.attributes[1].value}"]`).parentElement.className = 'text-danger';
-        console.log(LIST_OBJ_ARRAY);
+        localStorage.setItem(`todoList`, JSON.stringify(LIST_OBJ_ARRAY));
+        // console.log(LIST_OBJ_ARRAY);
         // console.log(e.target.attributes[1].value);
         // target.attributes[1].value
         // alert('checked');
     } else {
         LIST_OBJ_ARRAY[e.target.attributes[1].value].done = false;
         document.querySelector(`input[name="${e.target.attributes[1].value}"]`).parentElement.className = 'text-dark';
-        console.log(LIST_OBJ_ARRAY);
+        // console.log(LIST_OBJ_ARRAY);
         // alert('unchecked');
     }
 }
