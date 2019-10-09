@@ -207,7 +207,13 @@ function toggleAll() {
 }
 
 function deleteToggled() {
-
+    for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
+        if (LIST_OBJ_ARRAY[i].done) {
+            document.getElementById(i).remove();
+            LIST_OBJ_ARRAY.splice(`${i}`, 1);
+            localStorage.setItem(`todoList`, JSON.stringify(LIST_OBJ_ARRAY));
+        }
+    }
 }
 
 
