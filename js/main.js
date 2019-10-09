@@ -42,10 +42,16 @@ function loadApp() {
     INPUT_BOX.setAttribute('placeholder', 'What needs to get done?');
     INPUT_BOX.setAttribute('id', 'listItemInputBox');
 
-    let selectionBtns = createElementAndClass('div', 'btn-group');
+    let selectionBtns = createElementAndClass('div', 'btn-group p-3');
     selectionBtns.setAttribute('role', 'group');
     selectionBtns.setAttribute('aria-label', 'Selection Buttons');
-    selectionBtns.innerHTML = '<button id="viewDone" type="button" class="btn btn-success">&#10004;</button><button id="viewAll" type="button" class="btn btn-secondary">ALL</button><button id="viewTodo" type="button" class="btn btn-danger">&#10006;</button>'
+    selectionBtns.innerHTML = '<button id="viewDone" type="button" class="btn btn-success">&#10004;</button><button id="viewAll" type="button" class="btn btn-secondary">ALL</button><button id="viewTodo" type="button" class="btn btn-danger">&#10006;</button>';
+
+    let toggleBtns = createElementAndClass('div', 'btn-group'); //  btn-group-sm
+    toggleBtns.setAttribute('style', 'display: block;');
+    toggleBtns.setAttribute('role', 'group');
+    toggleBtns.setAttribute('aria-label', 'Selection Buttons');
+    toggleBtns.innerHTML = '<button id="toggleAll" type="button" class="btn btn-primary">&#128280;</button><button id="delete" type="button" class="btn btn-primary">&#128163;</button>';
 
     // To-do List
     // TO_DO_LIST.setAttribute('style', 'display: none;');
@@ -55,6 +61,7 @@ function loadApp() {
     centerCol.appendChild(INPUT_BOX);
     centerCol.appendChild(TO_DO_LIST);
     centerCol.appendChild(selectionBtns);
+    centerCol.appendChild(toggleBtns);
 
     row.appendChild(rightCol);
     row.appendChild(centerCol);
@@ -71,7 +78,7 @@ function loadApp() {
             addToList(i, JSON.parse(window.localStorage.todoList)[i].title);
             if (LIST_OBJ_ARRAY[i].done) {
                 let x = document.querySelector(`input[name="${i}"]`);
-                x.parentElement.className = 'text-success';
+                x.parentElement.className = 'text-success ml-5';
                 x.checked = true;
             }
         }
@@ -79,6 +86,8 @@ function loadApp() {
     document.getElementById('viewDone').addEventListener('click', viewDoneFunc);
     document.getElementById('viewAll').addEventListener('click', viewAllFunc);
     document.getElementById('viewTodo').addEventListener('click', viewTodoFunc);
+    document.getElementById('toggleAll').addEventListener('click', toggleAll);
+    document.getElementById('delete').addEventListener('click', deleteToggled);
 }
 
 // FUNCTIONS
@@ -116,7 +125,7 @@ function makeBtnsVisible() {
 }
 
 function addToList(name, title) {
-    let newListEntry = createElementAndClass('div', '');
+    let newListEntry = createElementAndClass('div', 'ml-5');
     newListEntry.innerHTML = `<input type="checkbox" name="${name}" value=""> ${title}`;
     newListEntry.addEventListener('change', strike);
     newListEntry.setAttribute('id', `${name}`);
@@ -127,7 +136,7 @@ function strike(e) {
     // console.log(e.target.checked);
     if (e.target.checked) {
         LIST_OBJ_ARRAY[e.target.attributes[1].value].done = true;
-        document.querySelector(`input[name="${e.target.attributes[1].value}"]`).parentElement.className = 'text-success';
+        document.querySelector(`input[name="${e.target.attributes[1].value}"]`).parentElement.className = 'text-success ml-5';
         localStorage.setItem(`todoList`, JSON.stringify(LIST_OBJ_ARRAY));
         // console.log(LIST_OBJ_ARRAY);
         // console.log(e.target.attributes[1].value);
@@ -135,14 +144,14 @@ function strike(e) {
         // alert('checked');
     } else {
         LIST_OBJ_ARRAY[e.target.attributes[1].value].done = false;
-        document.querySelector(`input[name="${e.target.attributes[1].value}"]`).parentElement.className = 'text-dark';
+        document.querySelector(`input[name="${e.target.attributes[1].value}"]`).parentElement.className = 'text-dark ml-5';
         localStorage.setItem(`todoList`, JSON.stringify(LIST_OBJ_ARRAY));
         // console.log(LIST_OBJ_ARRAY);
         // alert('unchecked');
     }
 }
 
-function viewDoneFunc() {
+function viewTodoFunc() {
     for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
         if (LIST_OBJ_ARRAY[i].done) {
             document.getElementById(i).setAttribute('style', 'display: none;');
@@ -162,7 +171,7 @@ function viewAllFunc() {
     // alert('view all');
 }
 
-function viewTodoFunc() {
+function viewDoneFunc() {
     for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
         if (!(LIST_OBJ_ARRAY[i].done)) {
             document.getElementById(i).setAttribute('style', 'display: none;');
@@ -174,17 +183,47 @@ function viewTodoFunc() {
     // alert('view todo');
 }
 
+function toggleAll() {
+    let checkForToggled = true;
+    for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
+        // If at any point in the array, there is a task NOT done, make false
+        if (!(LIST_OBJ_ARRAY[i].done)) {
+            checkForToggled = false;
+        }
+        LIST_OBJ_ARRAY[i].done = true;
+        document.querySelector(`input[name="${i}"]`).parentElement.className = 'text-success ml-5';
+        localStorage.setItem(`todoList`, JSON.stringify(LIST_OBJ_ARRAY));
+        document.querySelector(`input[name="${i}"]`).checked = true;
+    }
+    if (checkForToggled) {
+        for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
+            LIST_OBJ_ARRAY[i].done = false;
+            document.querySelector(`input[name="${i}"]`).parentElement.className = 'text-dark ml-5';
+            localStorage.setItem(`todoList`, JSON.stringify(LIST_OBJ_ARRAY));
+            document.querySelector(`input[name="${i}"]`).checked = false;
+        }
+        // alert('everything was checked');
+    }
+}
+
+function deleteToggled() {
+
+}
 
 
 
 
-// for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
-//     let parsedJSON = JSON.parse(window.localStorage.todoList)[`${i}`];
-//     // LIST_OBJ_ARRAY.push(new ListObj(i, parsedJSON.title, parsedJSON.done));
-//     addToList(i, JSON.parse(window.localStorage.todoList)[i].title);
-//     if (LIST_OBJ_ARRAY[i].done) {
-//         let x = document.querySelector(`input[name="${i}"]`);
-//         x.parentElement.className = 'text-success';
-//         x.checked = true;
-//     }
-// }
+
+
+/*
+
+Todo:
+
+---delete button
+
+Strech:
+---Add the total num under each row (on mouse over???)
+---clean up code -> lost of WET
+
+
+*/
