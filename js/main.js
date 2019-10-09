@@ -133,7 +133,8 @@ function addToList(name, title) {
 }
 
 function strike(e) {
-    // console.log(e.target.checked);
+    console.log(e);
+    // console.log(LIST_OBJ_ARRAY[e.target.attributes[1].value].done);
     if (e.target.checked) {
         LIST_OBJ_ARRAY[e.target.attributes[1].value].done = true;
         document.querySelector(`input[name="${e.target.attributes[1].value}"]`).parentElement.className = 'text-success ml-5';
@@ -207,16 +208,33 @@ function toggleAll() {
 }
 
 function deleteToggled() {
+    let j = 0;
     for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
-        if (LIST_OBJ_ARRAY[i].done) {
+        if (LIST_OBJ_ARRAY[i - j].done) {
             document.getElementById(i).remove();
-            LIST_OBJ_ARRAY.splice(`${i}`, 1);
-            localStorage.setItem(`todoList`, JSON.stringify(LIST_OBJ_ARRAY));
+            LIST_OBJ_ARRAY.splice(`${i - j}`, 1);
+            j++;
+        } else {
+            LIST_OBJ_ARRAY[i -j].id = i -j;
+            document.getElementById(i).setAttribute('id', `${i - j}`);
         }
     }
+    localStorage.setItem(`todoList`, JSON.stringify(LIST_OBJ_ARRAY));
 }
 
 
+// let deleteIdx = [];
+//     for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
+//         if (LIST_OBJ_ARRAY[i].done) {
+//             document.getElementById(i).remove();
+//             deleteIdx.push(i);
+//             LIST_OBJ_ARRAY.splice(`${i}`, 1);  
+//         }
+//     }
+//     for (let i = 0; i < deleteIdx.length; i++) {
+//         LIST_OBJ_ARRAY.splice(`${deleteIdx[i]}`, 1); 
+//     }
+//     localStorage.setItem(`todoList`, JSON.stringify(LIST_OBJ_ARRAY));
 
 
 
@@ -225,7 +243,7 @@ function deleteToggled() {
 
 Todo:
 
----delete button
+---delete button -> e.target...value isn't reseting
 
 Strech:
 ---Add the total num under each row (on mouse over???)
