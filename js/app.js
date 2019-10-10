@@ -2,19 +2,19 @@
 
 document.addEventListener('keydown', function (e) {
     // For testing --> Clears the local storage on key "="
-    if (e.keyCode === 187) {
-        localStorage.clear();
-        LIST_OBJ_ARRAY = [];
-        console.log(window.localStorage);
-    }
+    // if (e.keyCode === 187) {
+    //     localStorage.clear();
+    //     LIST_OBJ_ARRAY = [];
+    //     console.log(window.localStorage);
+    // }
     // For testing --> Displays the local storage and list obj array on "-" key
-    if (e.keyCode === 189) {
-        console.log('----- Parsed JSON -----');
-        console.log(JSON.parse(window.localStorage.todoList));
-        console.log('----- LIST_OBJ_ARRAY -----');
-        console.log(LIST_OBJ_ARRAY);
-        console.log(INPUT_BOX.value);
-    }
+    // if (e.keyCode === 189) {
+    //     console.log('----- Parsed JSON -----');
+    //     console.log(JSON.parse(window.localStorage.todoList));
+    //     console.log('----- LIST_OBJ_ARRAY -----');
+    //     console.log(LIST_OBJ_ARRAY);
+    //     console.log(INPUT_BOX.value);
+    // }
     // "Enter" key
     if (e.keyCode === 13) {
         if (INPUT_BOX.value.trim() !== '') {
@@ -34,10 +34,13 @@ function addToList(name, title) {
     newListEntry.setAttribute('id', `${name}`);
     newListEntry.setAttribute('style', 'word-wrap: break-word;');
     TO_DO_LIST.appendChild(newListEntry);
+    if (DONE_VIEW_ACTIVE) {
+        newListEntry.setAttribute('style', 'display: none;');
+    }
 }
 
 function strike(e) {
-    console.log(e);
+    // console.log(e);
     if (e.target.checked) {
         LIST_OBJ_ARRAY[e.target.parentNode.id].done = true;
         document.getElementById(`${e.target.parentNode.id}`).className = 'text-success text-left';
@@ -48,6 +51,23 @@ function strike(e) {
         localStorage.setItem(`todoList`, JSON.stringify(LIST_OBJ_ARRAY));
     }
 }
+function viewDoneFunc() {
+    for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
+        if (!(LIST_OBJ_ARRAY[i].done)) {
+            document.getElementById(i).setAttribute('style', 'display: none;');
+        } else {
+            document.getElementById(i).setAttribute('style', 'display: block;');
+        }
+    }
+    DONE_VIEW_ACTIVE = true;
+}
+
+function viewAllFunc() {
+    for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
+        document.getElementById(i).setAttribute('style', 'display: block;');
+    }
+    DONE_VIEW_ACTIVE = false;
+}
 
 function viewTodoFunc() {
     for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
@@ -57,22 +77,7 @@ function viewTodoFunc() {
             document.getElementById(i).setAttribute('style', 'display: block;');
         }
     }
-}
-
-function viewAllFunc() {
-    for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
-        document.getElementById(i).setAttribute('style', 'display: block;');
-    }
-}
-
-function viewDoneFunc() {
-    for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
-        if (!(LIST_OBJ_ARRAY[i].done)) {
-            document.getElementById(i).setAttribute('style', 'display: none;');
-        } else {
-            document.getElementById(i).setAttribute('style', 'display: block;');
-        }
-    }
+    DONE_VIEW_ACTIVE = false;
 }
 
 // function viewToggle(x) {
@@ -148,13 +153,12 @@ function hideCount() {
 
 Todo:
 
-Bugs:
----numbers won't appear on mouseover in mobile
+Issues:
+---Toggle all while in a view
 
 Stretch:
----clean up code -> lots of WET
----Add some animation
----Make line-breaks inline with checkbox
+---clean up code
+---Make line-breaks inline with checkbox -> could use bootstrap input-group
 
 didn't do the soft delete/archive...
 */
