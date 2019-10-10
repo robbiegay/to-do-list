@@ -44,13 +44,14 @@ function loadApp() {
     INPUT_BOX.setAttribute('id', 'listItemInputBox');
 
     // Selection Buttons
-    let selectionBtns = createElementAndClass('div', 'btn-group p-3');
+    let selectionBtns = createElementAndClass('div', 'btn-group pt-2');
+    selectionBtns.setAttribute('style', 'min-width: 265px;');
     selectionBtns.setAttribute('role', 'group');
     selectionBtns.setAttribute('aria-label', 'Selection Buttons');
     selectionBtns.innerHTML = '<button id="viewDone" type="button" class="btn btn-success">&#10004;</button><button id="viewAll" type="button" class="btn btn-secondary">ALL</button><button id="viewTodo" type="button" class="btn btn-danger">&#10006;</button>';
 
     // Toggle and Delete Buttons
-    let toggleBtns = createElementAndClass('div', 'btn-group'); //  btn-group-sm
+    let toggleBtns = createElementAndClass('div', 'btn-group p-1'); //  btn-group-sm
     toggleBtns.setAttribute('style', 'display: block;');
     toggleBtns.setAttribute('role', 'group');
     toggleBtns.setAttribute('aria-label', 'Selection Buttons');
@@ -84,10 +85,12 @@ function loadApp() {
         }
     }
 
-    // Add event listeners
+    // Add Event Listeners
     document.getElementById('viewDone').addEventListener('click', viewDoneFunc);
     document.getElementById('viewAll').addEventListener('click', viewAllFunc);
     document.getElementById('viewTodo').addEventListener('click', viewTodoFunc);
     document.getElementById('toggleAll').addEventListener('click', toggleAll);
     document.getElementById('delete').addEventListener('click', deleteToggled);
+    selectionBtns.addEventListener('mouseover', showCount);
+    selectionBtns.addEventListener('mouseout', hideCount);
 }

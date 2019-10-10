@@ -1,6 +1,6 @@
 // FUNCTIONS
 
-document.addEventListener('keydown', function(e) {
+document.addEventListener('keydown', function (e) {
     // For testing --> Clears the local storage on key "="
     if (e.keyCode === 187) {
         localStorage.clear();
@@ -21,8 +21,8 @@ document.addEventListener('keydown', function(e) {
             LIST_OBJ_ARRAY.push(new ListObj(LIST_OBJ_ARRAY.length, `${INPUT_BOX.value}`, false));
             localStorage.setItem(`todoList`, JSON.stringify(LIST_OBJ_ARRAY));
             INPUT_BOX.value = '';
-            let todoParsed = JSON.parse(window.localStorage.todoList);
-            addToList(todoParsed.length - 1, todoParsed[todoParsed.length - 1].title);
+            let x = JSON.parse(window.localStorage.todoList);
+            addToList(x.length - 1, x[x.length - 1].title);
         }
     }
 });
@@ -44,12 +44,10 @@ function strike(e) {
     if (e.target.checked) {
         LIST_OBJ_ARRAY[e.target.parentNode.id].done = true;
         document.getElementById(`${e.target.parentNode.id}`).className = 'text-success ml-5';
-        // document.querySelector(`input[name="${e.target.parentNode.id}"]`).parentElement.className = 'text-success ml-5';
         localStorage.setItem(`todoList`, JSON.stringify(LIST_OBJ_ARRAY));
     } else {
         LIST_OBJ_ARRAY[e.target.parentNode.id].done = false;
         document.getElementById(`${e.target.parentNode.id}`).className = 'text-dark ml-5';
-        // document.querySelector(`input[name="${e.target.parentNode.id}"]`).parentElement.className = 'text-dark ml-5';
         localStorage.setItem(`todoList`, JSON.stringify(LIST_OBJ_ARRAY));
     }
 }
@@ -80,24 +78,41 @@ function viewDoneFunc() {
     }
 }
 
+// function viewToggle(x) {
+//     for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
+//         switch (x) {
+//             case true:
+//                 document.getElementById(i).setAttribute('style', 'display: block;');
+//             case false:
+//                 document.getElementById(i).setAttribute('style', 'display: none;');
+//         }
+//     }
+// }
+
 function toggleAll() {
     let checkForToggled = true;
     for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
         // If at any point in the array, there is a task NOT done, make false
+        let x = document.getElementById(i);
         if (!(LIST_OBJ_ARRAY[i].done)) {
             checkForToggled = false;
         }
         LIST_OBJ_ARRAY[i].done = true;
-        document.querySelector(`input[name="${i}"]`).parentElement.className = 'text-success ml-5';
+        x.className = 'text-success ml-5';
+        // document.querySelector(`input[name="${i}"]`).parentElement.className = 'text-success ml-5';
         localStorage.setItem(`todoList`, JSON.stringify(LIST_OBJ_ARRAY));
-        document.querySelector(`input[name="${i}"]`).checked = true;
+        // document.querySelector(`input[name="${i}"]`).checked = true;
+        x.children.checked = true;
     }
     if (checkForToggled) {
         for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
+            let x = document.getElementById(i);
             LIST_OBJ_ARRAY[i].done = false;
-            document.querySelector(`input[name="${i}"]`).parentElement.className = 'text-dark ml-5';
+            x.className = 'text-dark ml-5';
+            // document.querySelector(`input[name="${i}"]`).parentElement.className = 'text-dark ml-5';
             localStorage.setItem(`todoList`, JSON.stringify(LIST_OBJ_ARRAY));
-            document.querySelector(`input[name="${i}"]`).checked = false;
+            // document.querySelector(`input[name="${i}"]`).checked = false;
+            x.children.checked = false;
         }
     }
 }
@@ -110,22 +125,41 @@ function deleteToggled() {
             LIST_OBJ_ARRAY.splice(`${i - j}`, 1);
             j++;
         } else {
-            LIST_OBJ_ARRAY[i -j].id = i -j;
+            LIST_OBJ_ARRAY[i - j].id = i - j;
             document.getElementById(i).setAttribute('id', `${i - j}`);
         }
     }
     localStorage.setItem(`todoList`, JSON.stringify(LIST_OBJ_ARRAY));
 }
 
+function showCount() {
+    if (localStorage.length > 0) {
+        let doneNum = 0, notDoneNum = 0;
+        for (let i = 0; i < LIST_OBJ_ARRAY.length; i++) {
+            LIST_OBJ_ARRAY[i].done ? doneNum++ : notDoneNum++;
+        }
+        document.getElementById('viewDone').innerHTML = `${doneNum}`;
+        document.getElementById('viewAll').innerHTML = `${LIST_OBJ_ARRAY.length}`;
+        document.getElementById('viewTodo').innerHTML = `${notDoneNum}`;
+    }
+}
+
+function hideCount() {
+    if (localStorage.length > 0) {
+        document.getElementById('viewDone').innerHTML = `&#10004;`;
+        document.getElementById('viewAll').innerHTML = `ALL`;
+        document.getElementById('viewTodo').innerHTML = `&#10006;`;
+    }
+}
 /*
 
 Todo:
 
----delete button -> e.target...value isn't reseting
-
 Strech:
----Add the total num under each row (on mouse over???)
 ---clean up code -> lots of WET
+---Add some animations
+---Make long entries have a line break
 
 
+didn't do the soft delete/archive
 */
