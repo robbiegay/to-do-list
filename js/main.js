@@ -1,10 +1,10 @@
-// JS
+// PAGE RENDER & GLOBAL VARIABLES
 
 // GLOBAL VARIABLES
 let LIST_OBJ_ARRAY = [];
 let APP = document.getElementById('app');
-let INPUT_BOX = createElementAndClass('input', 'm-2 text-dark col-10');
-let TO_DO_LIST = createElementAndClass('div', 'm-2 text-dark col-10 text-left');
+let INPUT_BOX = createElementAndClass('input', 'm-2 text-dark');
+let TO_DO_LIST = createElementAndClass('div', 'm-2 text-dark');
 
 // OBJECT CONSTRUCTORS
 class ListObj {
@@ -24,10 +24,11 @@ function createElementAndClass(element, classes) {
 
 // LOAD APP
 function loadApp() {
-    // Create Elements
+    // ---------- CREATE ELEMENTS ----------
     let container = createElementAndClass('div', 'container-fluid');
     let row = createElementAndClass('div', 'row');
 
+    // Columns
     let leftCol = createElementAndClass('div', 'col-0 col-sm-0 col-md-1 col-lg-2');
     let centerCol = createElementAndClass('div', 'col-12 col-sm-12 col-md-10 col-lg-8 text-center');
     let rightCol = createElementAndClass('div', 'col-0 col-sm-0 col-md-1 col-lg-2');
@@ -35,20 +36,57 @@ function loadApp() {
     // Title
     let title = createElementAndClass('h1', 'mt-5 display-4 text-dark');
     title.innerHTML = 'to-do';
+    
+    // Inner App
+    let appRow = createElementAndClass('div', 'row');
+
+    let innerLeftCol = createElementAndClass('div', 'col-0 col-sm-0 col-md-1 col-lg-2');
+    let innerCenterCol = createElementAndClass('div', 'col-12 col-sm-12 col-md-10 col-lg-8');
+    let innerRightCol = createElementAndClass('div', 'col-0 col-sm-0 col-md-1 col-lg-2');
 
     // Input Box
     INPUT_BOX.autofocus = true;
     INPUT_BOX.setAttribute('type', 'text');
+    INPUT_BOX.setAttribute('style', 'width: 100%;');
     INPUT_BOX.setAttribute('placeholder', 'What needs to get done?');
     INPUT_BOX.setAttribute('id', 'listItemInputBox');
 
-    // To-do List
-    // TO_DO_LIST.setAttribute('style', 'display: none;');
+    // Selection Buttons
+    let selectionBtns = createElementAndClass('div', 'btn-group pt-2');
+    selectionBtns.setAttribute('style', 'min-width: 265px;');
+    selectionBtns.setAttribute('role', 'group');
+    selectionBtns.setAttribute('aria-label', 'Selection Buttons');
+    selectionBtns.innerHTML = '<button id="viewDone" type="button" class="btn btn-success">&#10004;</button><button id="viewAll" type="button" class="btn btn-secondary">ALL</button><button id="viewTodo" type="button" class="btn btn-danger">&#10006;</button>';
 
-    // Append Elements
+    // Toggle and Delete Buttons
+    let toggleBtns = createElementAndClass('div', 'btn-group p-1'); //  btn-group-sm
+    toggleBtns.setAttribute('style', 'display: block;');
+    toggleBtns.setAttribute('role', 'group');
+    toggleBtns.setAttribute('aria-label', 'Selection Buttons');
+    toggleBtns.innerHTML = '<button id="toggleAll" type="button" class="btn btn-primary">&#128280;</button><button id="delete" type="button" class="btn btn-primary">&#128163;</button>';
+
+    // ---------- APPEND ELEMENTS ----------
+    // centerCol.appendChild(title);
+    // centerCol.appendChild(INPUT_BOX);
+    // centerCol.appendChild(TO_DO_LIST);
+    // centerCol.appendChild(selectionBtns);
+    // centerCol.appendChild(toggleBtns);
+    
+    innerCenterCol.appendChild(INPUT_BOX);
+    innerCenterCol.appendChild(TO_DO_LIST);
+
+    // appRow.appendChild(title);
+    appRow.appendChild(innerLeftCol);
+    appRow.appendChild(innerCenterCol);
+    appRow.appendChild(innerRightCol);
+    // appRow.appendChild(selectionBtns);
+    // appRow.appendChild(toggleBtns);
+
     centerCol.appendChild(title);
-    centerCol.appendChild(INPUT_BOX);
-    centerCol.appendChild(TO_DO_LIST);
+    // centerCol.appendChild(INPUT_BOX);
+    centerCol.appendChild(appRow);
+    centerCol.appendChild(selectionBtns);
+    centerCol.appendChild(toggleBtns);
 
     row.appendChild(rightCol);
     row.appendChild(centerCol);
@@ -57,74 +95,26 @@ function loadApp() {
     container.appendChild(row);
     APP.appendChild(container);
 
-    // When the page loads, if there is already values in the object array, populate the array
+    // On page load --> If there is data in local storage, populate array
     if (localStorage.length > 0) {
-        populateObjArray();
+        for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
+            let parsedJSON = JSON.parse(window.localStorage.todoList)[`${i}`];
+            LIST_OBJ_ARRAY.push(new ListObj(i, parsedJSON.title, parsedJSON.done));
+            addToList(i, JSON.parse(window.localStorage.todoList)[i].title);
+            if (LIST_OBJ_ARRAY[i].done) {
+                let x = document.querySelector(`input[name="${i}"]`);
+                x.parentElement.className = 'text-success text-left';
+                x.checked = true;
+            }
+        }
     }
-}
 
-// FUNCTIONS
-// INPUT_BOX.addEventListener(onchange, makeBtnsVisible);
-
-document.addEventListener('keydown', function (e) {
-    // For testing --> Clears the local storage on key "="
-    if (e.keyCode === 187) {
-        localStorage.clear();
-        LIST_OBJ_ARRAY = [];
-        console.log(window.localStorage);
-    }
-    // For testing --> Displays the local storage and list obj array on "-" key
-    if (e.keyCode === 189) {
-        console.log(window.localStorage);
-        console.log(LIST_OBJ_ARRAY);
-    }
-    // "Enter" key
-    if (e.keyCode === 13) {
-        localStorage.setItem(`listItem${localStorage.length}`, `${INPUT_BOX.value}`);
-        console.log(window.localStorage);
-        addToObjArray();
-        console.log(LIST_OBJ_ARRAY);
-        INPUT_BOX.value = '';
-    }
-});
-
-function makeBtnsVisible() {
-    // Make the buttons visible
-}
-
-function populateObjArray() {
-    for (let i = 0; i < localStorage.length; i++) {
-        LIST_OBJ_ARRAY.push(new ListObj(i, localStorage.getItem(`listItem${i}`), false));
-        let newListEntry = createElementAndClass('div', '');
-        // newListEntry.innerHTML = `<li>${LIST_OBJ_ARRAY[i].title}</li>`;
-        newListEntry.innerHTML = `<input type="checkbox" name="${i}" value=""> ${LIST_OBJ_ARRAY[i].title}`;
-        newListEntry.addEventListener('change', strike);
-        TO_DO_LIST.appendChild(newListEntry);
-    }
-}
-
-function addToObjArray() {
-    LIST_OBJ_ARRAY.push(new ListObj((localStorage.length - 1), `${INPUT_BOX.value}`, false));
-    let newListEntry = createElementAndClass('div', '');
-    // newListEntry.innerHTML = `<li>${LIST_OBJ_ARRAY[localStorage.length - 1].title}</li>`;
-    newListEntry.innerHTML = `<input type="checkbox" name="${localStorage.length - 1}" value=""> ${LIST_OBJ_ARRAY[localStorage.length - 1].title}`;
-    newListEntry.addEventListener('change', strike);
-    TO_DO_LIST.appendChild(newListEntry);
-}
-
-function strike(e) {
-    // console.log(e.target.checked);
-    if (e.target.checked) {
-        LIST_OBJ_ARRAY[e.target.attributes[1].value].done = true;
-        document.querySelector(`input[name="${e.target.attributes[1].value}"]`).parentElement.className = 'text-danger';
-        console.log(LIST_OBJ_ARRAY);
-        // console.log(e.target.attributes[1].value);
-        // target.attributes[1].value
-        // alert('checked');
-    } else {
-        LIST_OBJ_ARRAY[e.target.attributes[1].value].done = false;
-        document.querySelector(`input[name="${e.target.attributes[1].value}"]`).parentElement.className = 'text-dark';
-        console.log(LIST_OBJ_ARRAY);
-        // alert('unchecked');
-    }
+    // Add Event Listeners
+    document.getElementById('viewDone').addEventListener('click', viewDoneFunc);
+    document.getElementById('viewAll').addEventListener('click', viewAllFunc);
+    document.getElementById('viewTodo').addEventListener('click', viewTodoFunc);
+    document.getElementById('toggleAll').addEventListener('click', toggleAll);
+    document.getElementById('delete').addEventListener('click', deleteToggled);
+    selectionBtns.addEventListener('mouseover', showCount);
+    selectionBtns.addEventListener('mouseout', hideCount);
 }
