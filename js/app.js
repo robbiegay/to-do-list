@@ -27,15 +27,12 @@ document.addEventListener('keydown', function (e) {
     }
 });
 
-// function makeBtnsVisible() {
-//     // Make the buttons visible
-// }
-
 function addToList(name, title) {
-    let newListEntry = createElementAndClass('div', 'ml-5');
+    let newListEntry = createElementAndClass('div', 'text-left');
     newListEntry.innerHTML = `<input type="checkbox" name="${name}" value=""> ${title}`;
     newListEntry.addEventListener('change', strike);
     newListEntry.setAttribute('id', `${name}`);
+    newListEntry.setAttribute('style', 'word-wrap: break-word;');
     TO_DO_LIST.appendChild(newListEntry);
 }
 
@@ -43,11 +40,11 @@ function strike(e) {
     console.log(e);
     if (e.target.checked) {
         LIST_OBJ_ARRAY[e.target.parentNode.id].done = true;
-        document.getElementById(`${e.target.parentNode.id}`).className = 'text-success ml-5';
+        document.getElementById(`${e.target.parentNode.id}`).className = 'text-success text-left';
         localStorage.setItem(`todoList`, JSON.stringify(LIST_OBJ_ARRAY));
     } else {
         LIST_OBJ_ARRAY[e.target.parentNode.id].done = false;
-        document.getElementById(`${e.target.parentNode.id}`).className = 'text-dark ml-5';
+        document.getElementById(`${e.target.parentNode.id}`).className = 'text-dark text-left';
         localStorage.setItem(`todoList`, JSON.stringify(LIST_OBJ_ARRAY));
     }
 }
@@ -98,20 +95,16 @@ function toggleAll() {
             checkForToggled = false;
         }
         LIST_OBJ_ARRAY[i].done = true;
-        x.className = 'text-success ml-5';
-        // document.querySelector(`input[name="${i}"]`).parentElement.className = 'text-success ml-5';
+        x.className = 'text-success text-left';
         localStorage.setItem(`todoList`, JSON.stringify(LIST_OBJ_ARRAY));
-        // document.querySelector(`input[name="${i}"]`).checked = true;
         x.firstChild.checked = true;
     }
     if (checkForToggled) {
         for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
             let x = document.getElementById(i);
             LIST_OBJ_ARRAY[i].done = false;
-            x.className = 'text-dark ml-5';
-            // document.querySelector(`input[name="${i}"]`).parentElement.className = 'text-dark ml-5';
+            x.className = 'text-dark text-left';
             localStorage.setItem(`todoList`, JSON.stringify(LIST_OBJ_ARRAY));
-            // document.querySelector(`input[name="${i}"]`).checked = false;
             x.firstChild.checked = false;
         }
     }
@@ -155,11 +148,13 @@ function hideCount() {
 
 Todo:
 
-Strech:
+Bugs:
+---numbers won't appear on mouseover in mobile
+
+Stretch:
 ---clean up code -> lots of WET
----Add some animations
----Make long entries have a line break
+---Add some animation
+---Make line-breaks inline with checkbox
 
-
-didn't do the soft delete/archive
+didn't do the soft delete/archive...
 */

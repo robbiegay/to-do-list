@@ -3,8 +3,8 @@
 // GLOBAL VARIABLES
 let LIST_OBJ_ARRAY = [];
 let APP = document.getElementById('app');
-let INPUT_BOX = createElementAndClass('input', 'm-2 text-dark col-10');
-let TO_DO_LIST = createElementAndClass('div', 'm-2 text-dark col-10 text-left');
+let INPUT_BOX = createElementAndClass('input', 'm-2 text-dark');
+let TO_DO_LIST = createElementAndClass('div', 'm-2 text-dark');
 
 // OBJECT CONSTRUCTORS
 class ListObj {
@@ -36,10 +36,18 @@ function loadApp() {
     // Title
     let title = createElementAndClass('h1', 'mt-5 display-4 text-dark');
     title.innerHTML = 'to-do';
+    
+    // Inner App
+    let appRow = createElementAndClass('div', 'row');
+
+    let innerLeftCol = createElementAndClass('div', 'col-0 col-sm-0 col-md-1 col-lg-2');
+    let innerCenterCol = createElementAndClass('div', 'col-12 col-sm-12 col-md-10 col-lg-8');
+    let innerRightCol = createElementAndClass('div', 'col-0 col-sm-0 col-md-1 col-lg-2');
 
     // Input Box
     INPUT_BOX.autofocus = true;
     INPUT_BOX.setAttribute('type', 'text');
+    INPUT_BOX.setAttribute('style', 'width: 100%;');
     INPUT_BOX.setAttribute('placeholder', 'What needs to get done?');
     INPUT_BOX.setAttribute('id', 'listItemInputBox');
 
@@ -58,9 +66,25 @@ function loadApp() {
     toggleBtns.innerHTML = '<button id="toggleAll" type="button" class="btn btn-primary">&#128280;</button><button id="delete" type="button" class="btn btn-primary">&#128163;</button>';
 
     // ---------- APPEND ELEMENTS ----------
+    // centerCol.appendChild(title);
+    // centerCol.appendChild(INPUT_BOX);
+    // centerCol.appendChild(TO_DO_LIST);
+    // centerCol.appendChild(selectionBtns);
+    // centerCol.appendChild(toggleBtns);
+    
+    innerCenterCol.appendChild(INPUT_BOX);
+    innerCenterCol.appendChild(TO_DO_LIST);
+
+    // appRow.appendChild(title);
+    appRow.appendChild(innerLeftCol);
+    appRow.appendChild(innerCenterCol);
+    appRow.appendChild(innerRightCol);
+    // appRow.appendChild(selectionBtns);
+    // appRow.appendChild(toggleBtns);
+
     centerCol.appendChild(title);
-    centerCol.appendChild(INPUT_BOX);
-    centerCol.appendChild(TO_DO_LIST);
+    // centerCol.appendChild(INPUT_BOX);
+    centerCol.appendChild(appRow);
     centerCol.appendChild(selectionBtns);
     centerCol.appendChild(toggleBtns);
 
@@ -79,7 +103,7 @@ function loadApp() {
             addToList(i, JSON.parse(window.localStorage.todoList)[i].title);
             if (LIST_OBJ_ARRAY[i].done) {
                 let x = document.querySelector(`input[name="${i}"]`);
-                x.parentElement.className = 'text-success ml-5';
+                x.parentElement.className = 'text-success text-left';
                 x.checked = true;
             }
         }
