@@ -2,19 +2,19 @@
 
 document.addEventListener('keydown', function (e) {
     // For testing --> Clears the local storage on key "="
-    if (e.keyCode === 187) {
-        localStorage.clear();
-        LIST_OBJ_ARRAY = [];
-        console.log(window.localStorage);
-    }
+    // if (e.keyCode === 187) {
+    //     localStorage.clear();
+    //     LIST_OBJ_ARRAY = [];
+    //     console.log(window.localStorage);
+    // }
     // For testing --> Displays the local storage and list obj array on "-" key
-    if (e.keyCode === 189) {
-        console.log('----- Parsed JSON -----');
-        console.log(JSON.parse(window.localStorage.todoList));
-        console.log('----- LIST_OBJ_ARRAY -----');
-        console.log(LIST_OBJ_ARRAY);
-        console.log(INPUT_BOX.value);
-    }
+    // if (e.keyCode === 189) {
+    //     console.log('----- Parsed JSON -----');
+    //     console.log(JSON.parse(window.localStorage.todoList));
+    //     console.log('----- LIST_OBJ_ARRAY -----');
+    //     console.log(LIST_OBJ_ARRAY);
+    //     console.log(INPUT_BOX.value);
+    // }
     // "Enter" key
     if (e.keyCode === 13) {
         if (INPUT_BOX.value.trim() !== '') {
@@ -154,12 +154,11 @@ function hideCount() {
 Todo:
 
 Issues:
----numbers won't appear on mouseover in mobile
+---Toggle all while in a view
 
 Stretch:
----clean up code -> lots of WET
----Add some animation
----Make line-breaks inline with checkbox
+---clean up code
+---Make line-breaks inline with checkbox -> could use bootstrap input-group
 
 didn't do the soft delete/archive...
 */
