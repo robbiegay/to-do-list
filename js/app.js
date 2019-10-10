@@ -102,7 +102,7 @@ function toggleAll() {
         // document.querySelector(`input[name="${i}"]`).parentElement.className = 'text-success ml-5';
         localStorage.setItem(`todoList`, JSON.stringify(LIST_OBJ_ARRAY));
         // document.querySelector(`input[name="${i}"]`).checked = true;
-        x.children.checked = true;
+        x.firstChild.checked = true;
     }
     if (checkForToggled) {
         for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
@@ -112,7 +112,7 @@ function toggleAll() {
             // document.querySelector(`input[name="${i}"]`).parentElement.className = 'text-dark ml-5';
             localStorage.setItem(`todoList`, JSON.stringify(LIST_OBJ_ARRAY));
             // document.querySelector(`input[name="${i}"]`).checked = false;
-            x.children.checked = false;
+            x.firstChild.checked = false;
         }
     }
 }
