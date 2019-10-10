@@ -34,10 +34,13 @@ function addToList(name, title) {
     newListEntry.setAttribute('id', `${name}`);
     newListEntry.setAttribute('style', 'word-wrap: break-word;');
     TO_DO_LIST.appendChild(newListEntry);
+    if (DONE_VIEW_ACTIVE) {
+        newListEntry.setAttribute('style', 'display: none;');
+    }
 }
 
 function strike(e) {
-    console.log(e);
+    // console.log(e);
     if (e.target.checked) {
         LIST_OBJ_ARRAY[e.target.parentNode.id].done = true;
         document.getElementById(`${e.target.parentNode.id}`).className = 'text-success text-left';
@@ -48,6 +51,23 @@ function strike(e) {
         localStorage.setItem(`todoList`, JSON.stringify(LIST_OBJ_ARRAY));
     }
 }
+function viewDoneFunc() {
+    for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
+        if (!(LIST_OBJ_ARRAY[i].done)) {
+            document.getElementById(i).setAttribute('style', 'display: none;');
+        } else {
+            document.getElementById(i).setAttribute('style', 'display: block;');
+        }
+    }
+    DONE_VIEW_ACTIVE = true;
+}
+
+function viewAllFunc() {
+    for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
+        document.getElementById(i).setAttribute('style', 'display: block;');
+    }
+    DONE_VIEW_ACTIVE = false;
+}
 
 function viewTodoFunc() {
     for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
@@ -57,22 +77,7 @@ function viewTodoFunc() {
             document.getElementById(i).setAttribute('style', 'display: block;');
         }
     }
-}
-
-function viewAllFunc() {
-    for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
-        document.getElementById(i).setAttribute('style', 'display: block;');
-    }
-}
-
-function viewDoneFunc() {
-    for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
-        if (!(LIST_OBJ_ARRAY[i].done)) {
-            document.getElementById(i).setAttribute('style', 'display: none;');
-        } else {
-            document.getElementById(i).setAttribute('style', 'display: block;');
-        }
-    }
+    DONE_VIEW_ACTIVE = false;
 }
 
 // function viewToggle(x) {
@@ -148,7 +153,7 @@ function hideCount() {
 
 Todo:
 
-Bugs:
+Issues:
 ---numbers won't appear on mouseover in mobile
 
 Stretch:

@@ -5,6 +5,7 @@ let LIST_OBJ_ARRAY = [];
 let APP = document.getElementById('app');
 let INPUT_BOX = createElementAndClass('input', 'm-2 text-dark');
 let TO_DO_LIST = createElementAndClass('div', 'm-2 text-dark');
+let DONE_VIEW_ACTIVE = false;
 
 // OBJECT CONSTRUCTORS
 class ListObj {
