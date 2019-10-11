@@ -7,7 +7,7 @@ document.addEventListener('keydown', function (e) {
     //     LIST_OBJ_ARRAY = [];
     //     console.log(window.localStorage);
     // }
-    // // For testing --> Displays the local storage and list obj array on "-" key
+    // // For testing --> Displays some useful console.log()'s on "-" key
     // if (e.keyCode === 189) {
     //     console.log('----- Parsed JSON -----');
     //     console.log(JSON.parse(window.localStorage.todoList));
@@ -18,9 +18,11 @@ document.addEventListener('keydown', function (e) {
     // }
     // "Enter" key
     if (e.keyCode === 13) {
+        // Removes space from left or right of input
         if (INPUT_BOX.value.trim() !== '') {
             LIST_OBJ_ARRAY.push(new ListObj(LIST_OBJ_ARRAY.length, `${INPUT_BOX.value}`, false));
             localStorage.setItem(`todoList`, JSON.stringify(LIST_OBJ_ARRAY));
+            // Clears the input box after 'enter'
             INPUT_BOX.value = '';
             let x = JSON.parse(window.localStorage.todoList);
             addToList(x.length - 1, x[x.length - 1].title);
@@ -29,6 +31,7 @@ document.addEventListener('keydown', function (e) {
 });
 
 function addToList(name, title) {
+    // Creates the new DOM element
     let newListEntry = createElementAndClass('div', 'text-left');
     newListEntry.innerHTML = `<input type="checkbox" name="${name}" value=""> ${title}`;
     newListEntry.addEventListener('change', strike);
@@ -41,8 +44,8 @@ function addToList(name, title) {
 }
 
 function strike(e) {
-    // console.log(e);
     if (e.target.checked) {
+        // The id is on the div, which is the parent of the checkbox
         LIST_OBJ_ARRAY[e.target.parentNode.id].done = true;
         document.getElementById(`${e.target.parentNode.id}`).className = 'text-success text-left';
         localStorage.setItem(`todoList`, JSON.stringify(LIST_OBJ_ARRAY));
@@ -59,8 +62,10 @@ function strike(e) {
             viewDoneFunc();
     }
 }
+
 function viewDoneFunc() {
     for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
+        // If the item is NOT done, hide it
         if (!(LIST_OBJ_ARRAY[i].done)) {
             document.getElementById(i).setAttribute('style', 'display: none; word-wrap: break-word;');
         } else {
@@ -71,6 +76,7 @@ function viewDoneFunc() {
 }
 
 function viewAllFunc() {
+    // Loop through, set display to block for all items
     for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
         document.getElementById(i).setAttribute('style', 'display: block; word-wrap: break-word;');
     }
@@ -91,7 +97,7 @@ function viewTodoFunc() {
 function toggleAll() {
     let checkForToggled = true;
     for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
-        // If at any point in the array, there is a task NOT done, make false
+        // If at any point in the array there is a task NOT done, then prepare to set all items to checked
         let x = document.getElementById(i);
         if (!(LIST_OBJ_ARRAY[i].done)) {
             checkForToggled = false;
@@ -123,20 +129,28 @@ function toggleAll() {
 
 function deleteToggled() {
     let j = 0;
+    // increments j for every item removed. Otherwise, when the array
+    // is updated and an item is removed, the next item to be removed would be
+    // at the wrong index
     for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
         if (LIST_OBJ_ARRAY[i - j].done) {
             document.getElementById(i).remove();
             LIST_OBJ_ARRAY.splice(`${i - j}`, 1);
             j++;
+        // If the item is not removed, update its id number
         } else {
             LIST_OBJ_ARRAY[i - j].id = i - j;
             document.getElementById(i).setAttribute('id', `${i - j}`);
         }
     }
+    // Update the local storage from the newly updated array
     localStorage.setItem(`todoList`, JSON.stringify(LIST_OBJ_ARRAY));
 }
 
 function showCount() {
+    // Loops through the array, counts the number of done and not-done items.
+    // Then sets the inner HTML of the view-state buttons to their respective
+    // count numbers. Is triggered on a mouseover event.
     if (localStorage.length > 0) {
         let doneNum = 0, notDoneNum = 0;
         for (let i = 0; i < LIST_OBJ_ARRAY.length; i++) {
@@ -148,6 +162,7 @@ function showCount() {
     }
 }
 
+// Triggered on mouseout, returns view-state buttons to their original content
 function hideCount() {
     if (localStorage.length > 0) {
         document.getElementById('viewDone').innerHTML = `&#10004;`;
@@ -155,25 +170,12 @@ function hideCount() {
         document.getElementById('viewTodo').innerHTML = `&#10006;`;
     }
 }
-/*
 
+/*
 Todo:
 
 Stretch:
 ---clean up code
 ---Make line-breaks inline with checkbox -> could use bootstrap input-group
----Add README
 ---soft delete/archive
 */
-
-
-// function viewToggle(x) {
-//     for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
-//         switch (x) {
-//             case true:
-//                 document.getElementById(i).setAttribute('style', 'display: block;');
-//             case false:
-//                 document.getElementById(i).setAttribute('style', 'display: none;');
-//         }
-//     }
-// }
