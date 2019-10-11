@@ -1,19 +1,20 @@
 // FUNCTIONS
 
 document.addEventListener('keydown', function (e) {
-    // For testing --> Clears the local storage on key "="
+    // // For testing --> Clears the local storage on key "="
     // if (e.keyCode === 187) {
     //     localStorage.clear();
     //     LIST_OBJ_ARRAY = [];
     //     console.log(window.localStorage);
     // }
-    // For testing --> Displays the local storage and list obj array on "-" key
+    // // For testing --> Displays the local storage and list obj array on "-" key
     // if (e.keyCode === 189) {
     //     console.log('----- Parsed JSON -----');
     //     console.log(JSON.parse(window.localStorage.todoList));
     //     console.log('----- LIST_OBJ_ARRAY -----');
     //     console.log(LIST_OBJ_ARRAY);
     //     console.log(INPUT_BOX.value);
+    //     console.log(VIEW_STATE);
     // }
     // "Enter" key
     if (e.keyCode === 13) {
@@ -34,8 +35,8 @@ function addToList(name, title) {
     newListEntry.setAttribute('id', `${name}`);
     newListEntry.setAttribute('style', 'word-wrap: break-word;');
     TO_DO_LIST.appendChild(newListEntry);
-    if (DONE_VIEW_ACTIVE) {
-        newListEntry.setAttribute('style', 'display: none;');
+    if (VIEW_STATE === 'done') {
+        newListEntry.setAttribute('style', 'display: none; word-wrap: break-word;');
     }
 }
 
@@ -50,46 +51,42 @@ function strike(e) {
         document.getElementById(`${e.target.parentNode.id}`).className = 'text-dark text-left';
         localStorage.setItem(`todoList`, JSON.stringify(LIST_OBJ_ARRAY));
     }
+    switch (VIEW_STATE) {
+        case 'todo':
+            viewTodoFunc();
+            break;
+        case 'done':
+            viewDoneFunc();
+    }
 }
 function viewDoneFunc() {
     for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
         if (!(LIST_OBJ_ARRAY[i].done)) {
-            document.getElementById(i).setAttribute('style', 'display: none;');
+            document.getElementById(i).setAttribute('style', 'display: none; word-wrap: break-word;');
         } else {
-            document.getElementById(i).setAttribute('style', 'display: block;');
+            document.getElementById(i).setAttribute('style', 'display: block; word-wrap: break-word;');
         }
     }
-    DONE_VIEW_ACTIVE = true;
+    VIEW_STATE = 'done';
 }
 
 function viewAllFunc() {
     for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
-        document.getElementById(i).setAttribute('style', 'display: block;');
+        document.getElementById(i).setAttribute('style', 'display: block; word-wrap: break-word;');
     }
-    DONE_VIEW_ACTIVE = false;
+    VIEW_STATE = 'all';
 }
 
 function viewTodoFunc() {
     for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
         if (LIST_OBJ_ARRAY[i].done) {
-            document.getElementById(i).setAttribute('style', 'display: none;');
+            document.getElementById(i).setAttribute('style', 'display: none; word-wrap: break-word;');
         } else {
-            document.getElementById(i).setAttribute('style', 'display: block;');
+            document.getElementById(i).setAttribute('style', 'display: block; word-wrap: break-word;');
         }
     }
-    DONE_VIEW_ACTIVE = false;
+    VIEW_STATE = 'todo';
 }
-
-// function viewToggle(x) {
-//     for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
-//         switch (x) {
-//             case true:
-//                 document.getElementById(i).setAttribute('style', 'display: block;');
-//             case false:
-//                 document.getElementById(i).setAttribute('style', 'display: none;');
-//         }
-//     }
-// }
 
 function toggleAll() {
     let checkForToggled = true;
@@ -112,6 +109,15 @@ function toggleAll() {
             localStorage.setItem(`todoList`, JSON.stringify(LIST_OBJ_ARRAY));
             x.firstChild.checked = false;
         }
+    }
+    switch (VIEW_STATE) {
+        case 'todo':
+            console.log('todo was triggered');
+            viewTodoFunc();
+            break;
+        case 'done':
+            console.log('done was triggered');
+            viewDoneFunc();
     }
 }
 
@@ -153,12 +159,21 @@ function hideCount() {
 
 Todo:
 
-Issues:
----Toggle all while in a view
-
 Stretch:
 ---clean up code
 ---Make line-breaks inline with checkbox -> could use bootstrap input-group
-
-didn't do the soft delete/archive...
+---Add README
+---soft delete/archive
 */
+
+
+// function viewToggle(x) {
+//     for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
+//         switch (x) {
+//             case true:
+//                 document.getElementById(i).setAttribute('style', 'display: block;');
+//             case false:
+//                 document.getElementById(i).setAttribute('style', 'display: none;');
+//         }
+//     }
+// }

@@ -5,7 +5,7 @@ let LIST_OBJ_ARRAY = [];
 let APP = document.getElementById('app');
 let INPUT_BOX = createElementAndClass('input', 'm-2 text-dark');
 let TO_DO_LIST = createElementAndClass('div', 'm-2 text-dark');
-let DONE_VIEW_ACTIVE = false;
+let VIEW_STATE = 'all';
 
 // OBJECT CONSTRUCTORS
 class ListObj {
@@ -60,31 +60,21 @@ function loadApp() {
     selectionBtns.innerHTML = '<button id="viewDone" type="button" class="btn btn-success">&#10004;</button><button id="viewAll" type="button" class="btn btn-secondary">ALL</button><button id="viewTodo" type="button" class="btn btn-danger">&#10006;</button>';
 
     // Toggle and Delete Buttons
-    let toggleBtns = createElementAndClass('div', 'btn-group p-1'); //  btn-group-sm
+    let toggleBtns = createElementAndClass('div', 'btn-group p-1');
     toggleBtns.setAttribute('style', 'display: block;');
     toggleBtns.setAttribute('role', 'group');
     toggleBtns.setAttribute('aria-label', 'Selection Buttons');
     toggleBtns.innerHTML = '<button id="toggleAll" type="button" class="btn btn-primary">&#128280;</button><button id="delete" type="button" class="btn btn-primary">&#128163;</button>';
 
     // ---------- APPEND ELEMENTS ----------
-    // centerCol.appendChild(title);
-    // centerCol.appendChild(INPUT_BOX);
-    // centerCol.appendChild(TO_DO_LIST);
-    // centerCol.appendChild(selectionBtns);
-    // centerCol.appendChild(toggleBtns);
-    
     innerCenterCol.appendChild(INPUT_BOX);
     innerCenterCol.appendChild(TO_DO_LIST);
 
-    // appRow.appendChild(title);
     appRow.appendChild(innerLeftCol);
     appRow.appendChild(innerCenterCol);
     appRow.appendChild(innerRightCol);
-    // appRow.appendChild(selectionBtns);
-    // appRow.appendChild(toggleBtns);
 
     centerCol.appendChild(title);
-    // centerCol.appendChild(INPUT_BOX);
     centerCol.appendChild(appRow);
     centerCol.appendChild(selectionBtns);
     centerCol.appendChild(toggleBtns);
