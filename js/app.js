@@ -97,16 +97,18 @@ function viewTodoFunc() {
 function toggleAll() {
     let checkForToggled = true;
     for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
-        // If at any point in the array there is a task NOT done, then prepare to set all items to checked
+        // If at any point in the array there is a task NOT done, then set checkForToggled to false
         let x = document.getElementById(i);
         if (!(LIST_OBJ_ARRAY[i].done)) {
             checkForToggled = false;
         }
+        // Set all items to done and update the local storage from the array
         LIST_OBJ_ARRAY[i].done = true;
         x.className = 'text-success text-left';
         localStorage.setItem(`todoList`, JSON.stringify(LIST_OBJ_ARRAY));
         x.firstChild.checked = true;
     }
+    // If all items were done to begin with, then set them all to undone
     if (checkForToggled) {
         for (let i = 0; i < JSON.parse(window.localStorage.todoList).length; i++) {
             let x = document.getElementById(i);
